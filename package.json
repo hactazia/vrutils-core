@@ -1,0 +1,17 @@
+{
+  "name": "@vrutils/core",
+  "version": "1.0.0",
+  "author": "Hactazia",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "files": [
+    "/dist"
+  ],
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
