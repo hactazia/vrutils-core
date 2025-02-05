@@ -11,34 +11,47 @@ export interface IPlugin {
 }
 
 export interface IConfig {
-    enable: boolean;
-    [key: string]: any;
+    getKeys(): string[];
+    get<T>(path: string): T | undefined;
+    getOrDefault<T>(path: string, defaultValue: T): T;
+    set<T>(path: string, value: T): void;
+    has(path: string): boolean;
+    remove(path: string): void;
+    clear(): void;
 }
 
+export interface IPluginInfo {
+    name: string;
+    namespace: string;
+    version: string;
+    description?: string;
+    author?: string | string[];
+    license?: string;
+    updateUrl?: string;
+    require: string[];
+    [key: string]: string[] | string | undefined;
+}
+
+export type EventCallback = (...args: any[]) => any;
+
 export interface IWorker {
-    get name(): string;
-    get namespace(): string;
-    get version(): string;
-    get description(): string;
-    get author(): string | undefined;
-    get license(): string | undefined;
-    get updateUrl(): string | undefined;
+
+    get infos(): IPluginInfo;
+    get config(): IConfig;
 
     get isActive(): boolean;
     getInstance<T extends IPlugin>(): T;
 
-    getValue<T>(key: string, defaultValue?: T): T;
-    setValue<T>(key: string, value: T): void;
-    getValues(): { [key: string]: any };
-
-    log(...args: any[]): void;
+    info(...args: any[]): void;
     error(...args: any[]): void;
     warn(...args: any[]): void;
     debug(...args: any[]): void;
 
-    getWorker<T extends IWorker>(plugin: string): T;
+    getWorker<T extends IWorker>(plugin: string): T | null;
     getWorkers(): IWorker[];
 
-    addListener(event: string, listener: Function): void;
-    removeListener(event: string, listener: Function): void;
+    addListener(event: string, listener: EventCallback): number;
+    removeListener(id: number): void;
+    removeAllListeners(event: string): void;
+    emit(event: string, ...args: any[]): void;
 }
